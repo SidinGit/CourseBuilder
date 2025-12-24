@@ -1,0 +1,13 @@
+model Lesson {
+    id          String    @id @default(cuid())
+    title       String
+    videoId     String
+    videoUrl    String
+    thumbnail   String
+    duration    Int // Total duration of the video in seconds
+    order       Int // Order within the milestone
+    watchedTime Int       @default(0) // How much the user has watched (seconds)
+    completed   Boolean   @default(false) // Has the user finished this lesson?
+    milestoneId String
+    milestone   Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+}
