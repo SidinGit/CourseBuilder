@@ -1,0 +1,41 @@
+# PR Check Workflow - Validates PRs before merge
+
+name: PR Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm --filter api run format
+        continue-on-error: true
+
+      - name: Run ESLint
+        run: pnpm --filter api run lint
+
+      - name: Build check
+        run: pnpm --filter api run build
+
+      - name: Validate Prisma schema
+        run: cd apps/api && npx prisma validate
