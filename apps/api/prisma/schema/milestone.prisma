@@ -1,0 +1,11 @@
+model Milestone {
+    id          String   @id @default(cuid())
+    title       String
+    description String?
+    order       Int
+    courseId    String
+    course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+    lessons     Lesson[]
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
