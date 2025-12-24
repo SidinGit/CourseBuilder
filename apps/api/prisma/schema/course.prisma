@@ -2,7 +2,7 @@ model Course {
     id          String      @id @default(cuid())
     title       String
     description String?
-    topic       String
+    topic       String[]
     userId      String
     user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     milestones  Milestone[]
