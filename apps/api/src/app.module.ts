@@ -6,6 +6,9 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CourseModule } from './course/course.module';
+import { MilestoneModule } from './milestone/milestone.module';
+import { LessonModule } from './lesson/lesson.module';
+import { MilestoneModule } from './milestone/milestone.module';
 
 
 @Module({
@@ -13,7 +16,7 @@ import { CourseModule } from './course/course.module';
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule, 
     UserModule, 
-    AuthModule, CourseModule
+    AuthModule, CourseModule, MilestoneModule, LessonModule
   ],
   controllers: [AppController],
   providers: [AppService],
