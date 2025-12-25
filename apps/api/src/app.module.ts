@@ -8,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 import { CourseModule } from './course/course.module';
 import { MilestoneModule } from './milestone/milestone.module';
 import { LessonModule } from './lesson/lesson.module';
-import { MilestoneModule } from './milestone/milestone.module';
 
 
 @Module({
