@@ -5,5 +5,6 @@ import { MilestoneController } from './milestone.controller';
 @Module({
   controllers: [MilestoneController],
   providers: [MilestoneService],
+  exports: [MilestoneService],
 })
-export class MilestoneModule {}
+export class MilestoneModule { }
