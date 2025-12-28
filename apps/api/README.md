@@ -196,16 +196,40 @@ http://localhost:3001/api/docs
 ## 🛣️ Roadmap
 
 - [x] Project setup with NestJS + Prisma
-- [x] Database schema design (User, Course, Milestone, Lesson)
+- [x] Database schema design (User, Course, Milestone, Lesson, Video)
 - [x] User CRUD module
 - [x] JWT Authentication (Register/Login)
 - [x] Swagger API documentation
-- [ ] Auth Guards for protected routes
-- [ ] Error handling improvements
-- [ ] Course CRUD module
-- [ ] Milestone & Lesson modules
-- [ ] YouTube API integration
-- [ ] AI course generation
+- [x] Auth Guards for protected routes
+- [x] Course, Milestone & Lesson modules
+- [x] AI course generation (Google Gemini)
+- [x] YouTube API integration
+- [x] Video deduplication & caching
+- [ ] Watch time tracking
+- [ ] Deployment (Render + cron job)
+
+---
+
+## ⚡ Optimizations
+
+### Video Caching & Deduplication
+- Unique **Video table** stores YouTube videos once, shared across courses
+- Lessons reference videos via foreign key, eliminating data redundancy
+- Reduces storage and ensures consistency
+
+### Smart YouTube Search
+- **Medium duration filter** (4-20 min) excludes Shorts and overly long videos
+- Fetches `n+1` videos per milestone to handle duplicates gracefully
+- AI-generated unique search queries per milestone for relevant results
+
+### Batch Duration Fetching
+- Video durations fetched asynchronously **after** course generation
+- Batch API calls (up to 50 IDs per request) minimize YouTube API quota usage
+- Only fetches durations for new videos not already in database
+
+### Duplicate Prevention
+- Set-based tracking ensures no video appears twice in the same course
+- Sequential lesson ordering maintained even when duplicates are skipped
 
 ---
 

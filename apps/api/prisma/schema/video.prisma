@@ -1,0 +1,10 @@
+model Video {
+    id        String   @id @default(cuid())
+    ytVideoTitle     String
+    ytVideoId   String   @unique
+    ytVideoUrl  String
+    ytVideoThumbnail String
+    ytVideoTags      String[]
+    ytVideoDuration  Int? // Total duration of the video in seconds
+    lessons   Lesson[]
+}

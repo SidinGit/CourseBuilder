@@ -4,6 +4,7 @@ import { YoutubeService } from './youtube.service';
 import { CourseService } from '../course/course.service';
 import { MilestoneService } from '../milestone/milestone.service';
 import { LessonService } from '../lesson/lesson.service';
+import { VideoService } from 'src/video/video.service';
 
 export interface GenerateCourseInput {
     title: string;
@@ -27,6 +28,7 @@ export class CourseGeneratorService {
         private courseService: CourseService,
         private milestoneService: MilestoneService,
         private lessonService: LessonService,
+        private videoService: VideoService,
     ) { }
 
     async generateCourse(
@@ -53,6 +55,7 @@ export class CourseGeneratorService {
         let totalLessons = 0;
 
         // Step 3: Create Milestones and Lessons
+        const usedVideoIds = new Set<string>()
         for (const milestoneData of curriculum.milestones) {
             console.log(`📌 Creating milestone: ${milestoneData.title}`);
 
@@ -70,29 +73,58 @@ export class CourseGeneratorService {
             console.log(`🎬 Searching YouTube: ${milestoneData.youtubeSearchQuery}`);
             const videos = await this.youtubeService.searchVideos(
                 milestoneData.youtubeSearchQuery,
-                videosPerMilestone,
+                videosPerMilestone + 1,
             );
 
             // Step 5: Create Lessons from YouTube results
-            for (let i = 0; i < videos.length; i++) {
+            let lessonCount = 0
+            for (let i = 0; i < videos.length && lessonCount < videosPerMilestone; i++) {
                 const video = videos[i];
+
+                if (usedVideoIds.has(video.videoId)) {
+                    continue;
+                }
+
+                usedVideoIds.add(video.videoId)
+
+                // step 5a: Create or find the video record
+                const videoRecord = await this.videoService.findOrCreate({
+                    ytVideoTitle: video.title,
+                    ytVideoId: video.videoId,
+                    ytVideoUrl: `https://www.youtube.com/watch?v=${video.videoId}`,
+                    ytVideoThumbnail: video.thumbnail,
+                    ytVideoTags: [],  // YouTube search doesn't give tags
+                })
+
+                // step 5b: Create lesson with videoId and order
 
                 await this.lessonService.create(
                     {
-                        title: video.title,
-                        videoId: video.videoId,
-                        videoUrl: `https://www.youtube.com/watch?v=${video.videoId}`,
-                        thumbnail: video.thumbnail,
-                        duration: 0, // Can be fetched separately if needed
-                        order: i + 1,
+                        videoId: videoRecord.id,
+                        order: lessonCount + 1,
                     },
                     milestone.id,
                 );
+
+                lessonCount++;
                 totalLessons++;
             }
         }
 
         console.log('✅ Course generation complete!');
+
+        // 6. Background: Fetch durations for videos missing them
+        const videosWithoutDuration = await this.videoService.findMissingDurations();
+
+        const ytVideoIds = videosWithoutDuration.map(v => v.ytVideoId);
+
+        const durationMap = await this.youtubeService.getVideoDurations(ytVideoIds)
+
+        const updates = Array.from(durationMap, ([ytVideoId, duration]) =>
+            this.videoService.updateDuration(ytVideoId, duration)
+        );
+
+        await Promise.all(updates);
 
         return {
             courseId: course.id,

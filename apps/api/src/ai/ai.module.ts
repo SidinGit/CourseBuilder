@@ -7,6 +7,7 @@ import { CourseGeneratorService } from './course-generator.service';
 import { CourseModule } from '../course/course.module';
 import { MilestoneModule } from '../milestone/milestone.module';
 import { LessonModule } from '../lesson/lesson.module';
+import { VideoModule } from 'src/video/video.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LessonModule } from '../lesson/lesson.module';
     CourseModule,
     MilestoneModule,
     LessonModule,
+    VideoModule,
   ],
   controllers: [AiController],
   providers: [AiService, YoutubeService, CourseGeneratorService],

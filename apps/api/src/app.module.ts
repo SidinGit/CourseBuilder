@@ -9,6 +9,7 @@ import { CourseModule } from './course/course.module';
 import { MilestoneModule } from './milestone/milestone.module';
 import { LessonModule } from './lesson/lesson.module';
 import { AiModule } from './ai/ai.module';
+import { VideoModule } from './video/video.module';
 
 
 @Module({
@@ -16,7 +17,7 @@ import { AiModule } from './ai/ai.module';
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule, 
     UserModule, 
-    AuthModule, CourseModule, MilestoneModule, LessonModule, AiModule
+    AuthModule, CourseModule, MilestoneModule, LessonModule, AiModule, VideoModule
   ],
   controllers: [AppController],
   providers: [AppService],
