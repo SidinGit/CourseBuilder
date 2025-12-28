@@ -45,6 +45,30 @@ export class LessonService {
     });
   }
 
+
+  updateWatchTime(id: string, watchedTime: number) {
+    return this.prisma.lesson.update({
+      where: {
+        id,
+      },
+      data: {
+        watchedTime,
+      },
+    })
+  }
+
+  markComplete(id: string) {
+    return this.prisma.lesson.update({
+      where: {
+        id,
+      },
+      data: {
+        completed: true,
+      },
+    })
+  }
+
+
   remove(id: string) {
     return this.prisma.lesson.delete({
       where: {

@@ -44,7 +44,7 @@ CourseBuilder is an **AI-powered personalized learning platform** that generates
 | **ORM** | [Prisma](https://www.prisma.io/) v6 |
 | **Database** | [PostgreSQL](https://www.postgresql.org/) via [Neon](https://neon.tech/) |
 | **Authentication** | JWT with Passport.js |
-| **API Docs** | Swagger/OpenAPI |
+| **API Docs** | Swagger |
 | **Package Manager** | [pnpm](https://pnpm.io/) |
 
 ---
