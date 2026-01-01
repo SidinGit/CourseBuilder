@@ -37,7 +37,14 @@ export class AuthService {
             email: user.email,
         })
         //    4. Return token to client
-        return { access_token: token }
+        return {
+            access_token: token,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+            }
+        }
     }
 
     async login(loginDto: LoginDto) {
@@ -62,7 +69,14 @@ export class AuthService {
             email: user.email,
         })
 
-        return { access_token: token }
+        return {
+            access_token: token,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+            }
+        }
     }
 
 }
